@@ -81,7 +81,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
         `/api/${params.storeId}/billboards/${params.billboardId}`
       );
       router.refresh();
-      router.push("/");
+      router.push(`/${params.storeId}/billboards/`);
       toast.success("Billboard removed");
     } catch (error) {
       toast.error(
