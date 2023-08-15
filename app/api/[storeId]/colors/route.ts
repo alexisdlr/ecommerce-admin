@@ -6,12 +6,12 @@ export async function POST(req:Request, {params}: {params: {storeId: string}}) {
     const {userId} = auth()
     const body = await req.json()
 
-    const {label, imageUrl} = body
+    const {name, value} = body
     if(!userId) return new NextResponse('Unauthenticated', {status: 401})
 
-    if(!label) return new NextResponse('Label missing', {status: 400})
+    if(!name) return new NextResponse('Name missing', {status: 400})
     
-    if(!imageUrl) return new NextResponse('Image url missing', {status: 400})
+    if(!value) return new NextResponse('Value url missing', {status: 400})
 
     if(!params.storeId) return new NextResponse('Store id missing', {status: 400})
 
@@ -22,16 +22,16 @@ export async function POST(req:Request, {params}: {params: {storeId: string}}) {
       }
     })
     if(!existingStore) return new NextResponse('Store not exists in this user', {status: 400})
-    const billboard = await prismadb.billboard.create({
+    const color = await prismadb.color.create({
       data: {
-        label,
-        imageUrl,
+        name,
+        value,
         storeId: params.storeId
       }
     })
-    return NextResponse.json(billboard)
+    return NextResponse.json(color)
   } catch (error) {
-    console.log('[Billboards POST]', error)
+    console.log('[COLOR POST]', error)
     return new NextResponse('Internal Error', {status: 500})
   }
 }
@@ -40,14 +40,14 @@ export async function GET(req:Request, {params}: {params: {storeId: string}}) {
    
     if(!params.storeId) return new NextResponse('Store id missing', {status: 400})
 
-    const billboards = await prismadb.billboard.findMany({     
+    const sizes = await prismadb.color.findMany({     
       where: {
         storeId: params.storeId
       }
     })
-    return NextResponse.json(billboards)
+    return NextResponse.json(sizes)
   } catch (error) {
-    console.log('[Billboards GET]', error)
+    console.log('[COLOR GET]', error)
     return new NextResponse('Internal Error', {status: 500})
   }
 }
