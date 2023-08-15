@@ -29,7 +29,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = z.object({
   name: z.string().min(1),
-  price: z.number().min(1),
+  price: z.coerce.number().min(1),
   images: z.object({url: z.string()}).array(),
   colorId: z.string().min(1),
   sizeId: z.string().min(1),
@@ -82,14 +82,14 @@ const ProductForm = ({ initialData, categories, sizes, colors }: ProductFormProp
       setLoading(true);
       if (initialData) {
         await axios.patch(
-          `/api/${params.storeId}/billboards/${params.billboardId}`,
+          `/api/${params.storeId}/products/${params.productId}`,
           data
         );
       } else {
-        await axios.post(`/api/${params.storeId}/billboards`, data);
+        await axios.post(`/api/${params.storeId}/products`, data);
       }
       router.refresh();
-      router.push(`/${params.storeId}/billboards`);
+      router.push(`/${params.storeId}/products`);
       toast.success(toastMessage);
     } catch (error) {
       toast.error("Something went wrong");
@@ -101,14 +101,14 @@ const ProductForm = ({ initialData, categories, sizes, colors }: ProductFormProp
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/billboards/${params.billboardId}`
+        `/api/${params.storeId}/products/${params.productId}`
       );
       router.refresh();
-      router.push(`/${params.storeId}/billboards/`);
-      toast.success("Billboard removed");
+      router.push(`/${params.storeId}/productId/`);
+      toast.success("Product removed");
     } catch (error) {
       toast.error(
-        "Make sure you removed all categories using this billboard first."
+        "Make sure you removed all categories using this product first."
       );
     } finally {
       setLoading(false);
@@ -149,7 +149,7 @@ const ProductForm = ({ initialData, categories, sizes, colors }: ProductFormProp
             name="images"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Background Image</FormLabel>
+                <FormLabel>Images</FormLabel>
                 <FormControl>
                   <ImageUpload
                     value={field.value.map((image) => image.url)}
@@ -168,7 +168,7 @@ const ProductForm = ({ initialData, categories, sizes, colors }: ProductFormProp
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Label</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
